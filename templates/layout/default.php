@@ -40,19 +40,20 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         </div>
         <div class="top-nav-links">
         <ul style="list-style: none; display: flex; gap: 1rem; align-items: center; margin: 0; padding: 0;">
-        <li><?= $this->Html->link('Accueil', '/') ?></li>
-        <li><?= $this->Html->link('Utilisateurs', ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link('Artistes', ['controller' => 'Artists', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link('Home', ['controller' => 'Home', 'action' => 'index']) ?></li>
+
+        <li><?= $this->Html->link('Users', ['controller' => 'Users', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link('Artists', ['controller' => 'Artists', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link('Albums', ['controller' => 'Albums', 'action' => 'index']) ?></li>
 
         <?php if ($this->Identity->isLoggedIn()): ?>
             <li>
-                <?= $this->Form->postLink('Déconnexion', ['controller' => 'Users', 'action' => 'logout'], ['confirm' => 'Se déconnecter ?']) ?>
+                <?= $this->Form->postLink('Logout', ['controller' => 'Users', 'action' => 'logout'], ['confirm' => 'Se déconnecter ?']) ?>
         
             </li>
         <?php else: ?>
             <li style="margin-left: auto;">
-                <?= $this->Html->link('Connexion', ['controller' => 'Users', 'action' => 'login']) ?>
+                <?= $this->Html->link('Login', ['controller' => 'Users', 'action' => 'login']) ?>
             </li>
         <?php endif; ?>
     </ul>

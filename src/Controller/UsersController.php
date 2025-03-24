@@ -146,21 +146,20 @@ class UsersController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function login()
-{
-    $this->request->allowMethod(['get', 'post']);
-    $result = $this->Authentication->getResult();
+    {
+        $this->request->allowMethod(['get', 'post']);
+        $result = $this->Authentication->getResult();
 
-    if ($result->isValid()) {
-        $this->Flash->success(__('Connexion réussie !'));
+        if ($result->isValid()) {
+            $this->Flash->success(__('Connexion réussie !'));
+            return $this->redirect(['controller' => 'Home', 'action' => 'index']);
+        }
 
-        $redirect = $this->Authentication->getLoginRedirect() ?? ['controller' => 'Users', 'action' => 'index'];
-        return $this->redirect($redirect);
+
+        if ($this->request->is('post')) {
+            $this->Flash->error(__('Email ou mot de passe invalide.'));
+        }
     }
-
-    if ($this->request->is('post')) {
-        $this->Flash->error(__('Email ou mot de passe invalide.'));
-    }
-}
 
 
     public function logout()

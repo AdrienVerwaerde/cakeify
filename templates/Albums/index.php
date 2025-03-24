@@ -15,7 +15,6 @@
                     <th><?= $this->Paginator->sort('title') ?></th>
                     <th><?= $this->Paginator->sort('artist_id', 'Artist') ?></th>
                     <th><?= $this->Paginator->sort('release_date') ?></th>
-                    <th><?= $this->Paginator->sort('spotify_link') ?></th>
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
@@ -28,7 +27,6 @@
                     <td><?= h($album->title) ?></td>
                     <td><?= h($album->artist->name ?? '—') ?></td>
                     <td><?= h($album->release_date) ?></td>
-                    <td><?= h($album->spotify_link) ?></td>
                     <td><?= h($album->created) ?></td>
                     <td><?= h($album->modified) ?></td>
                     <td class="actions">

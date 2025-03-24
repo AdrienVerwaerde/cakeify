@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \Cake\Datasource\ResultSetInterface|\App\Model\Entity\Artist[] $lastArtists
+ * @var \App\Model\Entity\Artist[] $lastArtists
  */
 ?>
 <div class="home content">

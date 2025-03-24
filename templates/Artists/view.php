@@ -26,7 +26,7 @@
                 <tr>
                     <?php if (!empty($artist->spotify_link)) : ?>
                         <div style="margin: 2rem 0;">
-                            <h4><?= __('Écoute sur Cakeify') ?></h4>
+                            <h4><?= __('Listen') ?></h4>
                             <iframe
                                 src="<?= h($artist->spotify_link) ?>"
                                 width="100%"

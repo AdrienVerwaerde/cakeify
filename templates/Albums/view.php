@@ -1,23 +1,73 @@
-<h1><?= h($album->title) ?></h1>
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Album $album
+ */
+?>
+<div class="row">
+    <aside class="column">
+        <div class="side-nav">
+            <h4 class="heading"><?= __('Actions') ?></h4>
+            <?= $this->Html->link(__('Edit Album'), ['action' => 'edit', $album->id], ['class' => 'side-nav-item']) ?>
+            <?= $this->Form->postLink(
+                __('Delete Album'),
+                ['action' => 'delete', $album->id],
+                ['confirm' => __('Are you sure you want to delete # {0}?', $album->id), 'class' => 'side-nav-item']
+            ) ?>
+            <?= $this->Html->link(__('List Albums'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('New Album'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
+        </div>
+    </aside>
 
-<p><strong>Artiste :</strong>
-<?= $this->Html->link($album->artist->name, ['controller' => 'Artists', 'action' => 'view', $album->artist->id]) ?></p>
+    <div class="column column-80">
+        <div class="albums view content">
+            <h3><?= h($album->title) ?></h3>
+            <table>
+                <tr>
+                    <th><?= __('Title') ?></th>
+                    <td><?= h($album->title) ?></td>
+                </tr>
+                <tr>
+                    <th><?= __('Artist') ?></th>
+                    <td>
+                        <?= $this->Html->link(
+                            h($album->artist->name ?? 'Inconnu'),
+                            ['controller' => 'Artists', 'action' => 'view', $album->artist_id]
+                        ) ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th><?= __('Release Date') ?></th>
+                    <td><?= h($album->release_date) ?></td>
+                </tr>
+                <tr>
+                    <th><?= __('Id') ?></th>
+                    <td><?= $this->Number->format($album->id) ?></td>
+                </tr>
+                <tr>
+                    <th><?= __('Created') ?></th>
+                    <td><?= h($album->created) ?></td>
+                </tr>
+                <tr>
+                    <th><?= __('Modified') ?></th>
+                    <td><?= h($album->modified) ?></td>
+                </tr>
+            </table>
 
-<p><strong>Date de sortie :</strong> <?= h($album->release_date) ?></p>
-
-<?php if (!empty($album->spotify_link)): ?>
-    <p><strong>Écoute sur Spotify :</strong><br>
-    <iframe src="<?= h($album->spotify_link) ?>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></p>
-<?php endif; ?>
-
-<p><strong>Créé le :</strong> <?= h($album->created) ?></p>
-<p><strong>Modifié le :</strong> <?= h($album->modified) ?></p>
-
-<div style="margin-top: 1rem;">
-    <?= $this->Html->link('Modifier', ['action' => 'edit', $album->id], ['class' => 'button']) ?>
-    <?= $this->Form->postLink('Supprimer', ['action' => 'delete', $album->id], [
-        'confirm' => 'Supprimer cet album ?',
-        'class' => 'button'
-    ]) ?>
-    <?= $this->Html->link('Retour à la liste', ['action' => 'index'], ['class' => 'button']) ?>
+            <?php if (!empty($album->spotify_link)) : ?>
+                <div style="margin: 2rem 0;">
+                    <h4><?= __('Listen') ?></h4>
+                    <iframe
+                        src="<?= h($album->spotify_link) ?>"
+                        width="100%"
+                        height="152"
+                        frameborder="0"
+                        allowtransparency="true"
+                        allow="encrypted-media"
+                        style="border-radius: 12px;"
+                    ></iframe>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
 </div>
