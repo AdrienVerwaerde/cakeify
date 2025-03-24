@@ -13,7 +13,7 @@
                 <tr>
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('name') ?></th>
-                    <th><?= $this->Paginator->sort('spotify_link') ?></th>
+                    <!-- <th><?= $this->Paginator->sort('spotify_link') ?></th> -->
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
@@ -24,7 +24,7 @@
                 <tr>
                     <td><?= $this->Number->format($artist->id) ?></td>
                     <td><?= h($artist->name) ?></td>
-                    <td><?= h($artist->spotify_link) ?></td>
+                    <!-- <td><?= h($artist->spotify_link) ?></td> -->
                     <td><?= h($artist->created) ?></td>
                     <td><?= h($artist->modified) ?></td>
                     <td class="actions">

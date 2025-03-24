@@ -43,11 +43,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <li><?= $this->Html->link('Accueil', '/') ?></li>
         <li><?= $this->Html->link('Utilisateurs', ['controller' => 'Users', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link('Artistes', ['controller' => 'Artists', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link('Albums', ['controller' => 'Albums', 'action' => 'index']) ?></li>
 
         <?php if ($this->Identity->isLoggedIn()): ?>
-            <li style="margin-left: auto;">
-                Connecté en tant que <strong><?= h($this->Identity->get('email')) ?></strong>
-            </li>
             <li>
                 <?= $this->Form->postLink('Déconnexion', ['controller' => 'Users', 'action' => 'logout'], ['confirm' => 'Se déconnecter ?']) ?>
         
