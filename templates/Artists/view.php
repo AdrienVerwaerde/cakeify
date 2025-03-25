@@ -17,132 +17,120 @@
     </aside>
     <div class="column column-80">
         <div class="artists view content">
-            <h3><?= h($artist->name) ?></h3>
-            <table>
-                <tr>
-                    <th><?= __('Name') ?></th>
-                    <td><?= h($artist->name) ?></td>
-                </tr>
-                <tr>
-                    <?php if (!empty($artist->spotify_link)) : ?>
-                        <div style="margin: 2rem 0;">
-                            <h4><?= __('Listen') ?></h4>
-                            <iframe
-                                src="<?= h($artist->spotify_link) ?>"
-                                width="100%"
-                                height="152"
-                                frameborder="0"
-                                allowtransparency="true"
-                                allow="encrypted-media"
-                                style="border-radius: 12px;"></iframe>
+            <div style="display: flex; gap: 1.5rem;">
+                <h3><?= h($artist->name) ?></h3>
+                <?php if ($this->Identity->isLoggedIn()) : ?>
+                    <?= $this->Form->postLink(
+                        $isFavorited ? '♥' : '♡',
+                        ['controller' => 'Favorites', 'action' => 'toggle', 'artist', $artist->id],
+                        [
+                            'escape' => false,
+                            'class' => 'favorite-toggle',
+                            'style' => 'margin-top: -0.5rem; font-size: 3rem; color: ' . ($isFavorited ? 'crimson' : '#aaa') . '; text-decoration: none; border: none; background: transparent; cursor: pointer;'
+                        ]
+                    ) ?>
+                    <?php if ($this->Identity->isLoggedIn()) : ?>
+                        <div style="margin-left: auto;">
+                            <?= $this->Form->postLink(
+                                $isFollowing ? 'Unfollow' : 'Follow',
+                                ['controller' => 'Follows', 'action' => 'toggle', $artist->id],
+                                ['class' => 'button']
+                            ) ?>
                         </div>
                     <?php endif; ?>
 
-                </tr>
-                <tr>
-                    <th><?= __('Id') ?></th>
-                    <td><?= $this->Number->format($artist->id) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Created') ?></th>
-                    <td><?= h($artist->created) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Modified') ?></th>
-                    <td><?= h($artist->modified) ?></td>
-                </tr>
-            </table>
-            <div class="text">
-                <strong><?= __('Description') ?></strong>
-                <blockquote>
-                    <?= $this->Text->autoParagraph(h($artist->description)); ?>
-                </blockquote>
+
             </div>
-            <div class="related">
-    <h4><?= __('Related Albums') ?></h4>
-    <?php if (!empty($artist->albums)) : ?>
-    <div class="table-responsive">
+        <?php endif; ?>
         <table>
             <tr>
-                <th><?= __('Title') ?></th>
-                <th><?= __('Release Date') ?></th>
-                <th><?= __('Extract') ?></th>
-                <th class="actions"><?= __('Actions') ?></th>
+                <th><?= __('Name') ?></th>
+                <td><?= h($artist->name) ?></td>
             </tr>
-            <?php foreach ($artist->albums as $album) : ?>
             <tr>
-                <td><?= h($album->title) ?></td>
-                <td><?= h($album->release_date) ?></td>
-                <td>
-                    <?php if (!empty($album->spotify_link)) : ?>
+                <?php if (!empty($artist->spotify_link)) : ?>
+                    <div style="margin: 2rem 0;">
+                        <h4><?= __('Listen') ?></h4>
                         <iframe
-                            src="<?= h($album->spotify_link) ?>"
-                            width="250"
-                            height="80"
+                            src="<?= h($artist->spotify_link) ?>"
+                            width="100%"
+                            height="152"
                             frameborder="0"
                             allowtransparency="true"
                             allow="encrypted-media"
-                            style="border-radius: 8px;"
-                        ></iframe>
-                    <?php else: ?>
-                        —
-                    <?php endif; ?>
-                </td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'Albums', 'action' => 'view', $album->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Albums', 'action' => 'edit', $album->id]) ?>
-                    <?= $this->Form->postLink(
-                        __('Delete'),
-                        ['controller' => 'Albums', 'action' => 'delete', $album->id],
-                        [
-                            'confirm' => __('Are you sure you want to delete # {0}?', $album->id),
-                            'method' => 'post',
-                        ]
-                    ) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
-    <?php endif; ?>
-</div>
-
-            <div class="related">
-                <h4><?= __('Related Follows') ?></h4>
-                <?php if (!empty($artist->follows)) : ?>
-                    <div class="table-responsive">
-                        <table>
-                            <tr>
-                                <th><?= __('Id') ?></th>
-                                <th><?= __('User Id') ?></th>
-                                <th><?= __('Artist Id') ?></th>
-                                <th><?= __('Created') ?></th>
-                                <th class="actions"><?= __('Actions') ?></th>
-                            </tr>
-                            <?php foreach ($artist->follows as $follow) : ?>
-                                <tr>
-                                    <td><?= h($follow->id) ?></td>
-                                    <td><?= h($follow->user_id) ?></td>
-                                    <td><?= h($follow->artist_id) ?></td>
-                                    <td><?= h($follow->created) ?></td>
-                                    <td class="actions">
-                                        <?= $this->Html->link(__('View'), ['controller' => 'Follows', 'action' => 'view', $follow->id]) ?>
-                                        <?= $this->Html->link(__('Edit'), ['controller' => 'Follows', 'action' => 'edit', $follow->id]) ?>
-                                        <?= $this->Form->postLink(
-                                            __('Delete'),
-                                            ['controller' => 'Follows', 'action' => 'delete', $follow->id],
-                                            [
-                                                'method' => 'delete',
-                                                'confirm' => __('Are you sure you want to delete # {0}?', $follow->id),
-                                            ]
-                                        ) ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </table>
+                            style="border-radius: 12px;"></iframe>
                     </div>
                 <?php endif; ?>
-            </div>
+
+            </tr>
+            <tr>
+                <th><?= __('Id') ?></th>
+                <td><?= $this->Number->format($artist->id) ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Created') ?></th>
+                <td><?= h($artist->created) ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Modified') ?></th>
+                <td><?= h($artist->modified) ?></td>
+            </tr>
+        </table>
+        <div class="text">
+            <strong><?= __('Description') ?></strong>
+            <blockquote>
+                <?= $this->Text->autoParagraph(h($artist->description)); ?>
+            </blockquote>
+        </div>
+        <div class="related">
+            <h4><?= __('Related Albums') ?></h4>
+            <?php if (!empty($artist->albums)) : ?>
+                <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th><?= __('Title') ?></th>
+                            <th><?= __('Release Date') ?></th>
+                            <th class="actions"><?= __('Actions') ?></th>
+                        </tr>
+                        <?php foreach ($artist->albums as $album) : ?>
+                            <tr>
+                                <td><?= h($album->title) ?></td>
+                                <td><?= h($album->release_date) ?></td>
+                                <td class="actions">
+                                    <?= $this->Html->link(__('View'), ['controller' => 'Albums', 'action' => 'view', $album->id]) ?>
+                                    <?= $this->Html->link(__('Edit'), ['controller' => 'Albums', 'action' => 'edit', $album->id]) ?>
+                                    <?= $this->Form->postLink(
+                                        __('Delete'),
+                                        ['controller' => 'Albums', 'action' => 'delete', $album->id],
+                                        [
+                                            'confirm' => __('Are you sure you want to delete # {0}?', $album->id),
+                                            'method' => 'post',
+                                        ]
+                                    ) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="related">
+            <h4><?= __('Followers') ?></h4>
+            <?php if (!empty($artist->follows)) : ?>
+                <ul>
+                    <?php foreach ($artist->follows as $follow): ?>
+                        <li>
+                            <?= $this->Html->link(
+                                h($follow->user->email ?? '[Utilisateur supprimé]'),
+                                ['controller' => 'Users', 'action' => 'view', $follow->user_id]
+                            ) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+        </div>
+    <?php endif; ?>
+
         </div>
     </div>
 </div>

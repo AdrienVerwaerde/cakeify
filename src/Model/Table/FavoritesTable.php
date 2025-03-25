@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -47,9 +48,17 @@ class FavoritesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'joinType' => 'INNER',
+        $this->belongsTo('Users');
+        $this->belongsTo('Artists', [
+            'foreignKey' => 'favoritable_id',
+            'conditions' => ['Favorites.favoritable_type' => 'artist'],
+            'joinType' => 'LEFT'
+        ]);
+        
+        $this->belongsTo('Albums', [
+            'foreignKey' => 'favoritable_id',
+            'conditions' => ['Favorites.favoritable_type' => 'album'],
+            'joinType' => 'LEFT'
         ]);
     }
 

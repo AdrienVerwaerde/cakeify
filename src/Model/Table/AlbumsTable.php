@@ -47,6 +47,12 @@ class AlbumsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->hasMany('Favorites', [
+            'foreignKey' => 'favoritable_id',
+            'conditions' => ['Favorites.favoritable_type' => 'album'],
+        ]);
+        
+
         $this->belongsTo('Artists', [
             'foreignKey' => 'artist_id',
             'joinType' => 'INNER',

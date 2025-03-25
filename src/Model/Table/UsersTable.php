@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -53,21 +54,31 @@ class UsersTable extends Table
         $this->hasMany('Favorites', [
             'foreignKey' => 'user_id',
         ]);
+
         $this->hasMany('Follows', [
             'foreignKey' => 'user_id',
+            'dependent' => true,
         ]);
+        
+        $this->belongsToMany('FollowedArtists', [
+            'className' => 'Artists',
+            'joinTable' => 'follows',
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'artist_id'
+        ]);
+
         $this->hasMany('Requests', [
             'foreignKey' => 'user_id',
         ]);
     }
 
     public function beforeSave(\Cake\Event\EventInterface $event, $entity, $options)
-{
-    if ($entity->isDirty('password')) {
-        $hasher = new DefaultPasswordHasher();
-        $entity->password = $hasher->hash($entity->password);
+    {
+        if ($entity->isDirty('password')) {
+            $hasher = new DefaultPasswordHasher();
+            $entity->password = $hasher->hash($entity->password);
+        }
     }
-}
 
     /**
      * Default validation rules.
@@ -117,5 +128,4 @@ class UsersTable extends Table
 
         return $rules;
     }
-    
 }

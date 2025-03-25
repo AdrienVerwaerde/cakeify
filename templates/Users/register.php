@@ -1,8 +1,12 @@
-<h1>Créer un compte</h1>
+<h1>Sign up</h1>
 
-<?= $this->Form->create($user, ['type' => 'post']) ?>
-<?= $this->Form->control('email') ?>
-<?= $this->Form->control('username') ?>
-<?= $this->Form->control('password', ['type' => 'password']) ?>
-<?= $this->Form->button('Créer mon compte') ?>
+<?= $this->Form->create($user) ?>
+<?= $this->Form->control('email', ['label' => 'Email']) ?>
+<?= $this->Form->control('password', [
+    'label' => 'Password',
+    'type' => 'password'
+]) ?>
+<?= $this->Form->button('Create account') ?>
 <?= $this->Form->end() ?>
+
+<p><?= $this->Html->link('Already have an account? Login', ['action' => 'login']) ?></p>

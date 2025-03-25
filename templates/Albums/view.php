@@ -21,7 +21,22 @@
 
     <div class="column column-80">
         <div class="albums view content">
-            <h3><?= h($album->title) ?></h3>
+            <div style="display: flex;">
+                <h3><?= h($album->name) ?></h3>
+                <?php if ($this->Identity->isLoggedIn()) : ?>
+                    <?= $this->Form->postLink(
+                        $isFavorited ? '♥' : '♡',
+                        ['controller' => 'Favorites', 'action' => 'toggle', 'album', $album->id],
+                        [
+                            'escape' => false,
+                            'class' => 'favorite-toggle',
+                            'style' => 'margin-top: -0.5rem; font-size: 3rem; color: ' . ($isFavorited ? 'crimson' : '#aaa') . '; text-decoration: none; border: none; background: transparent; cursor: pointer;'
+                        ]
+                    ) ?>
+                    
+            </div>
+        <?php endif; ?>
+
             <table>
                 <tr>
                     <th><?= __('Title') ?></th>

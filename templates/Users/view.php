@@ -50,13 +50,13 @@
 
             <?php if (!empty($user->favorites)) : ?>
                 <div class="related">
-                    <h4><?= __('Favoris') ?></h4>
+                    <h4><?= __('Favorites') ?></h4>
                     <div class="table-responsive">
                         <table>
                             <tr>
                                 <th><?= __('Type') ?></th>
-                                <th><?= __('Nom / Titre') ?></th>
-                                <th><?= __('Ajouté le') ?></th>
+                                <th><?= __('Name') ?></th>
+                                <th><?= __('Added on') ?></th>
                             </tr>
                             <?php foreach ($user->favorites as $favorite) : ?>
                                 <tr>
@@ -64,16 +64,16 @@
                                     <td>
                                         <?php if ($favorite->favoritable_type === 'artist') : ?>
                                             <?= $this->Html->link(
-                                                h($favorite->artist->name ?? '[Artiste supprimé]'),
+                                                h($favorite->artist->name ?? '[Deleted Artist]'),
                                                 ['controller' => 'Artists', 'action' => 'view', $favorite->favoritable_id]
                                             ) ?>
                                         <?php elseif ($favorite->favoritable_type === 'album') : ?>
                                             <?= $this->Html->link(
-                                                h($favorite->album->title ?? '[Album supprimé]'),
+                                                h($favorite->album->title ?? '[Deleted Album]'),
                                                 ['controller' => 'Albums', 'action' => 'view', $favorite->favoritable_id]
                                             ) ?>
                                         <?php else: ?>
-                                            <?= '[Objet inconnu]' ?>
+                                            <?= '[Unknown object]' ?>
                                         <?php endif; ?>
                                     </td>
                                     <td><?= h($favorite->created) ?></td>
@@ -87,18 +87,18 @@
 
             <?php if (!empty($user->follows)) : ?>
                 <div class="related">
-                    <h4><?= __('Artistes suivis') ?></h4>
+                    <h4><?= __('Followed Artists') ?></h4>
                     <div class="table-responsive">
                         <table>
                             <tr>
-                                <th><?= __('Artiste') ?></th>
-                                <th><?= __('Depuis le') ?></th>
+                                <th><?= __('Artist') ?></th>
+                                <th><?= __('Since') ?></th>
                             </tr>
                             <?php foreach ($user->follows as $follow) : ?>
                                 <tr>
                                     <td>
                                         <?= $this->Html->link(
-                                            h($follow->artist->name ?? '[Artiste supprimé]'),
+                                            h($follow->artist->name ?? '[Deleted Artist]'),
                                             ['controller' => 'Artists', 'action' => 'view', $follow->artist_id]
                                         ) ?>
                                     </td>

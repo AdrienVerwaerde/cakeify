@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -51,9 +52,24 @@ class ArtistsTable extends Table
         $this->hasMany('Albums', [
             'foreignKey' => 'artist_id',
         ]);
+
+        $this->hasMany('Favorites', [
+            'foreignKey' => 'favoritable_id',
+            'conditions' => ['Favorites.favoritable_type' => 'artist']
+        ]);
+
         $this->hasMany('Follows', [
             'foreignKey' => 'artist_id',
+            'dependent' => true,
         ]);
+        
+        $this->belongsToMany('Followers', [
+            'className' => 'Users',
+            'joinTable' => 'follows',
+            'foreignKey' => 'artist_id',
+            'targetForeignKey' => 'user_id'
+        ]);
+        
     }
 
     /**

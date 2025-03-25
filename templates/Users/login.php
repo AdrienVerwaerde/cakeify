@@ -1,12 +1,12 @@
-<h1>Connexion</h1>
+<h1>Login</h1>
 
 <?= $this->Form->create() ?>
-<?= $this->Form->control('email') ?>
-<?= $this->Form->control('password') ?>
-<?= $this->Form->button('Se connecter') ?>
+<?= $this->Form->control('email', ['label' => 'Email']) ?>
+<?= $this->Form->control('password', [
+    'label' => 'Password',
+    'type' => 'password'
+]) ?>
+<?= $this->Form->button('Login') ?>
 <?= $this->Form->end() ?>
 
-<p style="margin-top: 1rem;">
-    Pas encore de compte ?
-    <?= $this->Html->link('Créer un compte', ['action' => 'register']) ?>
-</p>
+<p><?= $this->Html->link('No account yet? Register!', ['action' => 'register']) ?></p>

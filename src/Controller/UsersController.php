@@ -58,6 +58,7 @@ class UsersController extends AppController
      */
     public function index()
     {
+        $this->Authorization->skipAuthorization();
         $query = $this->Users->find();
         $users = $this->paginate($query);
 
@@ -73,7 +74,14 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
-        $user = $this->Users->get($id, contain: ['Favorites', 'Follows', 'Requests']);
+        $user = $this->Users->get($id, [
+            'contain' => [
+                'Favorites' => ['Artists', 'Albums'],
+                'Follows' => ['Artists'],
+                'Requests'
+            ]
+        ]);
+        
         $this->set(compact('user'));
     }
 
@@ -85,6 +93,9 @@ class UsersController extends AppController
     public function add()
     {
         $user = $this->Users->newEmptyEntity();
+        $this->Authorization->authorize($user, 'add');
+
+        $this->Authorization->skipAuthorization();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
@@ -93,6 +104,7 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            
         }
         $this->set(compact('user'));
     }
@@ -107,6 +119,8 @@ class UsersController extends AppController
     public function edit($id = null)
     {
         $user = $this->Users->get($id, contain: []);
+        $this->Authorization->authorize($user, 'edit');
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
@@ -130,6 +144,8 @@ class UsersController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
+        $this->Authorization->authorize($user, 'delete');
+
         if ($this->Users->delete($user)) {
             $this->Flash->success(__('The user has been deleted.'));
         } else {
@@ -147,6 +163,7 @@ class UsersController extends AppController
      */
     public function login()
     {
+        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
 
@@ -164,6 +181,7 @@ class UsersController extends AppController
 
     public function logout()
     {
+        $this->Authorization->skipAuthorization();
         $result = $this->Authentication->getResult();
         if ($result->isValid()) {
             $this->Authentication->logout();

@@ -17,9 +17,12 @@ class AlbumsController extends AppController
      */
     public function index()
     {
+        $this->Authorization->skipAuthorization();
         $query = $this->Albums->find()
             ->contain(['Artists']);
         $albums = $this->paginate($query);
+
+        
 
         $this->set(compact('albums'));
     }
@@ -33,8 +36,22 @@ class AlbumsController extends AppController
      */
     public function view($id = null)
     {
-        $album = $this->Albums->get($id, contain: ['Artists']);
-        $this->set(compact('album'));
+        $album = $this->Albums->get($id, [
+            'contain' => ['Artists', 'Favorites']
+        ]);
+        
+        $isFavorited = false;
+        
+        $userId = $this->request->getAttribute('identity')?->getIdentifier();
+        
+        if ($userId) {
+            $isFavorited = collection($album->favorites)
+                ->some(fn($fav) => $fav->user_id === $userId);
+        }
+
+        $this->Authorization->authorize($album);
+        
+        $this->set(compact('album', 'isFavorited'));
     }
 
     /**
@@ -45,6 +62,8 @@ class AlbumsController extends AppController
     public function add()
     {
         $album = $this->Albums->newEmptyEntity();
+        $this->Authorization->authorize($album, 'add');
+
         if ($this->request->is('post')) {
             $album = $this->Albums->patchEntity($album, $this->request->getData());
             if ($this->Albums->save($album)) {
@@ -68,6 +87,9 @@ class AlbumsController extends AppController
     public function edit($id = null)
     {
         $album = $this->Albums->get($id, contain: []);
+        $this->Authorization->authorize($album);
+
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $album = $this->Albums->patchEntity($album, $this->request->getData());
             if ($this->Albums->save($album)) {
@@ -92,6 +114,9 @@ class AlbumsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $album = $this->Albums->get($id);
+        $this->Authorization->authorize($album);
+
+
         if ($this->Albums->delete($album)) {
             $this->Flash->success(__('The album has been deleted.'));
         } else {

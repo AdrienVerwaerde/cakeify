@@ -102,4 +102,28 @@ class FollowsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function toggle($artistId = null)
+    {
+        $this->request->allowMethod(['post']);
+        $userId = $this->request->getAttribute('identity')->getIdentifier();
+
+        $existing = $this->Follows->find()
+            ->where(['user_id' => $userId, 'artist_id' => $artistId])
+            ->first();
+
+        if ($existing) {
+            $this->Follows->delete($existing);
+            $this->Flash->success(__('You unfollowed the artist.'));
+        } else {
+            $follow = $this->Follows->newEntity([
+                'user_id' => $userId,
+                'artist_id' => $artistId
+            ]);
+            $this->Follows->save($follow);
+            $this->Flash->success(__('You are now following the artist.'));
+        }
+
+        return $this->redirect($this->referer());
+    }
 }

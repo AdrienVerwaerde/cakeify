@@ -61,6 +61,7 @@ session_id('cli');
 // Otherwise, table objects inside migrations would use the default datasource
 ConnectionHelper::addTestAliases();
 
+
 // Use migrations to build test database schema.
 //
 // Will rebuild the database if the migration state differs

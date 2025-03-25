@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -99,5 +100,35 @@ class FavoritesController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function toggle($type = null, $id = null)
+    {
+        $this->request->allowMethod(['post']);
+
+        $userId = $this->request->getAttribute('identity')->getIdentifier();
+
+        $existing = $this->Favorites->find()
+            ->where([
+                'user_id' => $userId,
+                'favoritable_id' => $id,
+                'favoritable_type' => $type
+            ])
+            ->first();
+
+        if ($existing) {
+            $this->Favorites->delete($existing);
+            $this->Flash->success(__('Removed from favorites.'));
+        } else {
+            $favorite = $this->Favorites->newEntity([
+                'user_id' => $userId,
+                'favoritable_id' => $id,
+                'favoritable_type' => $type
+            ]);
+            $this->Favorites->save($favorite);
+            $this->Flash->success(__('Added to favorites.'));
+        }
+
+        return $this->redirect($this->referer());
     }
 }

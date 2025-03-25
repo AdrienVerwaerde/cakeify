@@ -36,7 +36,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <body>
     <nav class="top-nav">
         <div class="top-nav-title">
-            <a href="<?= $this->Url->build('/') ?>"><span>cake</span>ify</a>
+            <a href="<?= $this->Url->build('/') ?>"><span>CAKE</span>IFY</a>
         </div>
         <div class="top-nav-links">
         <ul style="list-style: none; display: flex; gap: 1rem; align-items: center; margin: 0; padding: 0;">

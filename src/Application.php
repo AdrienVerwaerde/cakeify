@@ -33,6 +33,12 @@ use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\AuthorizationServiceProviderInterface;
+use Authorization\AuthorizationService;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\Policy\OrmResolver;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Application setup class.
@@ -42,7 +48,9 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @extends \Cake\Http\BaseApplication<\App\Application>
  */
-class Application extends BaseApplication implements AuthenticationServiceProviderInterface
+class Application extends BaseApplication
+    implements AuthenticationServiceProviderInterface,
+    AuthorizationServiceProviderInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -54,6 +62,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         // Call parent to load bootstrap from files.
         parent::bootstrap();
 
+        $this->addPlugin('Authorization');
+
         if (PHP_SAPI !== 'cli') {
             FactoryLocator::add(
                 'Table',
@@ -61,6 +71,13 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             );
         }
     }
+
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
+{
+    $resolver = new OrmResolver();
+
+    return new AuthorizationService($resolver);
+}
 
     /**
      * Setup the middleware queue your application will use.
@@ -91,14 +108,17 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // https://book.cakephp.org/5/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
 
-
             ->add(new AuthenticationMiddleware($this))
+
+            ->add(new AuthorizationMiddleware($this))
 
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/5/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
             ->add(new CsrfProtectionMiddleware([
                 'httponly' => true,
             ]));
+
+            
 
         return $middlewareQueue;
     }
