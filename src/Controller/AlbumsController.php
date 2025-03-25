@@ -17,12 +17,11 @@ class AlbumsController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
         $query = $this->Albums->find()
             ->contain(['Artists']);
         $albums = $this->paginate($query);
 
-        
+        $this->Authorization->skipAuthorization();
 
         $this->set(compact('albums'));
     }
@@ -39,19 +38,17 @@ class AlbumsController extends AppController
         $album = $this->Albums->get($id, [
             'contain' => ['Artists', 'Favorites']
         ]);
-        
-        $isFavorited = false;
+        $this->Authorization->authorize($album);
+        $isFavorite = false;
         
         $userId = $this->request->getAttribute('identity')?->getIdentifier();
         
         if ($userId) {
-            $isFavorited = collection($album->favorites)
+            $isFavorite = collection($album->favorites)
                 ->some(fn($fav) => $fav->user_id === $userId);
         }
-
-        $this->Authorization->authorize($album);
         
-        $this->set(compact('album', 'isFavorited'));
+        $this->set(compact('album', 'isFavorite'));
     }
 
     /**
@@ -124,5 +121,14 @@ class AlbumsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        
+        $this->Authentication->allowUnauthenticated(['view', 'index']);
+
+        $this->Authorization->skipAuthorization();
     }
 }

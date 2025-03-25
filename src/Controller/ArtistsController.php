@@ -18,9 +18,11 @@ class ArtistsController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        
         $query = $this->Artists->find();
         $artists = $this->paginate($query);
+
+        $this->Authorization->skipAuthorization();
 
         $this->set(compact('artists'));
     }
@@ -40,7 +42,7 @@ class ArtistsController extends AppController
         ]);
         $this->Authorization->authorize($artist);
 
-        $isFavorited = false;
+        $isFavorite = false;
         $isFollowing = false;
         $userId = $this->request->getAttribute('identity')?->getIdentifier();
 
@@ -52,11 +54,11 @@ class ArtistsController extends AppController
         $userId = $this->request->getAttribute('identity')?->getIdentifier();
 
         if ($userId) {
-            $isFavorited = collection($artist->favorites)
+            $isFavorite = collection($artist->favorites)
                 ->some(fn($fav) => $fav->user_id === $userId);
         }
 
-        $this->set(compact('artist', 'isFavorited', 'isFollowing'));
+        $this->set(compact('artist', 'isFavorite', 'isFollowing'));
     }
 
     /**
@@ -125,5 +127,14 @@ class ArtistsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        
+        $this->Authentication->allowUnauthenticated(['view', 'index']);
+
+        $this->Authorization->skipAuthorization();
     }
 }

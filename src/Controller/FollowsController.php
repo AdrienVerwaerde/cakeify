@@ -105,6 +105,8 @@ class FollowsController extends AppController
 
     public function toggle($artistId = null)
     {
+
+        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['post']);
         $userId = $this->request->getAttribute('identity')->getIdentifier();
 

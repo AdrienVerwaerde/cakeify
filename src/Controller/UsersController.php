@@ -20,14 +20,15 @@ class UsersController extends AppController
     {
         parent::initialize();
 
-        $this->Authentication->allowUnauthenticated(['login']);
     }
 
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
 
-        $this->Authentication->addUnauthenticatedActions(['login', 'register']);
+        $this->Authentication->addUnauthenticatedActions(['login']);
+
+        $this->Authorization->skipAuthorization();
     }
 
     public function register()
@@ -58,9 +59,11 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+
         $query = $this->Users->find();
         $users = $this->paginate($query);
+
+        $this->Authorization->skipAuthorization();
 
         $this->set(compact('users'));
     }
@@ -81,7 +84,7 @@ class UsersController extends AppController
                 'Requests'
             ]
         ]);
-        
+
         $this->set(compact('user'));
     }
 
@@ -104,7 +107,6 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
-            
         }
         $this->set(compact('user'));
     }
@@ -163,29 +165,32 @@ class UsersController extends AppController
      */
     public function login()
     {
-        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
+        $this->Authorization->skipAuthorization();
 
         if ($result->isValid()) {
-            $this->Flash->success(__('Connexion réussie !'));
-            return $this->redirect(['controller' => 'Home', 'action' => 'index']);
+            $target = $this->Authentication->getLoginRedirect();
+
+            if ($target === '/users/login') {
+                $target = ['controller' => 'Home', 'action' => 'index'];
+            }
+
+            return $this->redirect($target ?: ['controller' => 'Home', 'action' => 'index']);
         }
 
-
         if ($this->request->is('post')) {
-            $this->Flash->error(__('Email ou mot de passe invalide.'));
+            $this->Flash->error('Wrong email or password.');
         }
     }
 
 
+
     public function logout()
     {
-        $this->Authorization->skipAuthorization();
-        $result = $this->Authentication->getResult();
-        if ($result->isValid()) {
-            $this->Authentication->logout();
-            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
-        }
+        $this->Authentication->logout();
+
+        $this->Flash->success('Déconnexion réussie.');
+        return $this->redirect(['controller' => 'Home', 'action' => 'index']);
     }
 }

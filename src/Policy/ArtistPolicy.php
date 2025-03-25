@@ -1,14 +1,26 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Policy;
 
 use App\Model\Entity\Artist;
 use Authorization\IdentityInterface;
 
+/**
+ * Artist policy
+ */
 class ArtistPolicy
 {
+    /**
+     * Check if $user can add Artist
+     *
+     * @param \Authorization\IdentityInterface $user The user.
+     * @param \App\Model\Entity\Artist $artist
+     * @return bool
+     */
     public function canIndex(IdentityInterface $user, Artist $artist)
     {
-        return true;
+        return true; // tout le monde peut voir
     }
 
     public function canView(IdentityInterface $user, Artist $artist)

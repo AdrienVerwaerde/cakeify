@@ -102,33 +102,33 @@ class FavoritesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function toggle($type = null, $id = null)
-    {
-        $this->request->allowMethod(['post']);
+    public function toggle(string $type, int $id)
+{
+    $this->Authorization->skipAuthorization();
 
-        $userId = $this->request->getAttribute('identity')->getIdentifier();
+    $userId = $this->request->getAttribute('identity')->getIdentifier();
 
-        $existing = $this->Favorites->find()
-            ->where([
-                'user_id' => $userId,
-                'favoritable_id' => $id,
-                'favoritable_type' => $type
-            ])
-            ->first();
+    $conditions = [
+        'user_id' => $userId,
+        'favoritable_type' => $type,
+        'favoritable_id' => $id,
+    ];
 
-        if ($existing) {
-            $this->Favorites->delete($existing);
-            $this->Flash->success(__('Removed from favorites.'));
-        } else {
-            $favorite = $this->Favorites->newEntity([
-                'user_id' => $userId,
-                'favoritable_id' => $id,
-                'favoritable_type' => $type
-            ]);
-            $this->Favorites->save($favorite);
-            $this->Flash->success(__('Added to favorites.'));
-        }
+    $favorite = $this->Favorites->find()->where($conditions)->first();
 
-        return $this->redirect($this->referer());
+    if ($favorite) {
+        $this->Favorites->delete($favorite);
+        $this->Flash->success('Retiré des favoris');
+    } else {
+        $new = $this->Favorites->newEntity($conditions);
+        $this->Favorites->save($new);
+        $this->Flash->success('Ajouté aux favoris');
     }
+
+    return $this->redirect([
+        'controller' => ucfirst($type) . 's',
+        'action' => 'view',
+        $id
+    ]);
+}
 }
