@@ -21,8 +21,8 @@
                     <th><?= $this->Paginator->sort('title') ?></th>
                     <th><?= $this->Paginator->sort('artist_id', 'Artist') ?></th>
                     <th><?= $this->Paginator->sort('release_date') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
+                    <!-- <th><?= $this->Paginator->sort('created') ?></th>
+                    <th><?= $this->Paginator->sort('modified') ?></th> -->
                     <?php if ($this->Identity->get('role') === 'admin') : ?>
                         <th class="actions"><?= __('Actions') ?></th>
                     <?php endif; ?>
@@ -40,9 +40,9 @@
                         <td>
                             <?= $album->artist ? $this->Html->link(h($album->artist->name), ['controller' => 'Artists', 'action' => 'view', $album->artist->id]) : '' ?>
                         </td>
-                        <td><?= h($album->release_date) ?></td>
-                        <td><?= h($album->created) ?></td>
-                        <td><?= h($album->modified) ?></td>
+                        <td><?= $this->Time->format($album->release_date, 'dd/MM/yyyy') ?></td>
+                        <!-- <td><?= h($album->created) ?></td>
+                        <td><?= h($album->modified) ?></td> -->
                         <?php if ($this->Identity->get('role') === 'admin') : ?>
                             <td class="actions">
                                 <?= $this->Html->link(__('View'), ['action' => 'view', $album->id]) ?>

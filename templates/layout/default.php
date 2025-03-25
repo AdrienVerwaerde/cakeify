@@ -51,6 +51,17 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
                 <li><?= $this->Html->link('Artists', ['controller' => 'Artists', 'action' => 'index']) ?></li>
                 <li><?= $this->Html->link('Albums', ['controller' => 'Albums', 'action' => 'index']) ?></li>
+                <li><?= $this->Html->link('Stats', ['controller' => 'Stats', 'action' => 'index'], ['class' => 'nav-link']) ?></li>
+                <?php if ($this->Identity->isLoggedIn()): ?>
+                    <li>
+                        <?= $this->Html->link(
+                            h($this->Identity->get('email')),
+                            ['controller' => 'Users', 'action' => 'view', $this->Identity->get('id')]
+                        ) ?>
+                    </li>
+                <?php endif; ?>
+
+
 
                 <?php if ($this->Identity->isLoggedIn()): ?>
                     <li>

@@ -25,7 +25,9 @@ class AlbumPolicy
         return true;
     }
 
-    public function canAdd(IdentityInterface $user, Album $album) {}
+    public function canAdd(IdentityInterface $user, Album $album) {
+        return $user->role === 'admin';
+    }
 
     /**
      * Check if $user can edit Album
@@ -34,7 +36,9 @@ class AlbumPolicy
      * @param \App\Model\Entity\Album $album
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Album $album) {}
+    public function canEdit(IdentityInterface $user, Album $album) {
+        return $user->role === 'admin';
+    }
 
     /**
      * Check if $user can delete Album
@@ -43,7 +47,9 @@ class AlbumPolicy
      * @param \App\Model\Entity\Album $album
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Album $album) {}
+    public function canDelete(IdentityInterface $user, Album $album) {
+        return $user->role === 'admin';
+    }
 
     /**
      * Check if $user can view Album

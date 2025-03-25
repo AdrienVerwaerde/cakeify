@@ -19,7 +19,6 @@ class UsersController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-
     }
 
     public function beforeFilter(\Cake\Event\EventInterface $event)
@@ -59,14 +58,18 @@ class UsersController extends AppController
      */
     public function index()
     {
+        $user = $this->request->getAttribute('identity');
+
+        if ($user->get('role') !== 'admin') {
+            throw new \Cake\Http\Exception\ForbiddenException('Accès interdit');
+        }
 
         $query = $this->Users->find();
         $users = $this->paginate($query);
 
-        $this->Authorization->skipAuthorization();
-
         $this->set(compact('users'));
     }
+
 
     /**
      * View method
@@ -77,6 +80,7 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
+        $identity = $this->request->getAttribute('identity');
         $user = $this->Users->get($id, [
             'contain' => [
                 'Favorites' => ['Artists', 'Albums'],
@@ -84,6 +88,10 @@ class UsersController extends AppController
                 'Requests'
             ]
         ]);
+
+        if ($identity->get('role') !== 'admin' && $identity->getIdentifier() != $user->id) {
+            throw new \Cake\Http\Exception\ForbiddenException('You don\'t have access to this page');
+        }
 
         $this->set(compact('user'));
     }

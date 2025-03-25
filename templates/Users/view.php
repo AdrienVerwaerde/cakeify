@@ -1,28 +1,35 @@
 <?php
-
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  */
 ?>
+
+<?php
+$isOwnProfile = $this->Identity->get('id') === $user->id;
+$isAdmin = $this->Identity->get('role') === 'admin';
+?>
+
 <div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(
-                __('Delete User'),
-                ['action' => 'delete', $user->id],
-                [
-                    'confirm' => __('Are you sure you want to delete # {0}?', $user->id),
-                    'class' => 'side-nav-item'
-                ]
-            ) ?>
-            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column column-80">
+    <?php if ($isAdmin): ?>
+        <aside class="column">
+            <div class="side-nav">
+                <h4 class="heading"><?= __('Actions') ?></h4>
+                <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id], ['class' => 'side-nav-item']) ?>
+                <?= $this->Form->postLink(
+                    __('Delete User'),
+                    ['action' => 'delete', $user->id],
+                    [
+                        'confirm' => __('Are you sure you want to delete # {0}?', $user->id),
+                        'class' => 'side-nav-item'
+                    ]
+                ) ?>
+                <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+            </div>
+        </aside>
+    <?php endif; ?>
+
+    <div class="column <?= $isAdmin ? 'column-80' : 'column-100' ?>">
         <div class="users view content">
             <h3><?= h($user->email) ?></h3>
             <table>
@@ -40,11 +47,11 @@
                 </tr>
                 <tr>
                     <th><?= __('Created') ?></th>
-                    <td><?= h($user->created) ?></td>
+                    <td><?= $this->Time->format($user->created, 'dd/MM/yyyy') ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Modified') ?></th>
-                    <td><?= h($user->modified) ?></td>
+                    <td><?= $this->Time->format($user->modified, 'dd/MM/yyyy') ?></td>
                 </tr>
             </table>
 
@@ -76,14 +83,13 @@
                                             <?= '[Unknown object]' ?>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= h($favorite->created) ?></td>
+                                    <td><?= $this->Time->format($favorite->created, 'dd/MM/yyyy') ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
                     </div>
                 </div>
             <?php endif; ?>
-
 
             <?php if (!empty($user->follows)) : ?>
                 <div class="related">
@@ -102,14 +108,13 @@
                                             ['controller' => 'Artists', 'action' => 'view', $follow->artist_id]
                                         ) ?>
                                     </td>
-                                    <td><?= h($follow->created) ?></td>
+                                    <td><?= $this->Time->format($follow->created, 'dd/MM/yyyy') ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
                     </div>
                 </div>
             <?php endif; ?>
-
 
             <?php if (!empty($user->requests)): ?>
                 <div class="related">
@@ -127,7 +132,7 @@
                                     <td><?= h($request->id) ?></td>
                                     <td><?= h($request->type) ?></td>
                                     <td><?= h($request->status) ?></td>
-                                    <td><?= h($request->created) ?></td>
+                                    <td><?= $this->Time->format($request->created, 'dd/MM/yyyy') ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
@@ -137,3 +142,27 @@
         </div>
     </div>
 </div>
+
+<style>
+    table  {
+        display: flex;
+        justify-content: space-between;
+    }
+    table th,
+    table td {
+        width: 250px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .table-responsive th:first-child,
+    .table-responsive td:first-child {
+        width: 250px;
+    }
+
+    .table-responsive table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+</style>

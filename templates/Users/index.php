@@ -24,8 +24,8 @@
                     <td><?= $this->Number->format($user->id) ?></td>
                     <td><?= h($user->email) ?></td>
                     <td><?= h($user->role) ?></td>
-                    <td><?= h($user->created) ?></td>
-                    <td><?= h($user->modified) ?></td>
+                    <td><?= $this->Time->format($user->created, 'dd/MM/yyyy') ?></td>
+                    <td><?= $this->Time->format($user->modified, 'dd/MM/yyyy') ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $user->id]) ?>
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id]) ?>

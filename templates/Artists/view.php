@@ -60,8 +60,8 @@
             <table>
                 <tr><th><?= __('Name') ?></th><td><?= h($artist->name) ?></td></tr>
                 <tr><th><?= __('Description') ?></th><td><?= h($artist->description) ?></td></tr>
-                <tr><th><?= __('Created') ?></th><td><?= h($artist->created) ?></td></tr>
-                <tr><th><?= __('Modified') ?></th><td><?= h($artist->modified) ?></td></tr>
+                <!-- <tr><th><?= __('Created') ?></th><td><?= h($artist->created) ?></td></tr>
+                <tr><th><?= __('Modified') ?></th><td><?= h($artist->modified) ?></td></tr> -->
             </table>
 
             <?php if (!empty($artist->albums)) : ?>

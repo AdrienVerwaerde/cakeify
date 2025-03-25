@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -17,9 +18,8 @@ class RequestsController extends AppController
      */
     public function index()
     {
-        $query = $this->Requests->find()
-            ->contain(['Users']);
-        $requests = $this->paginate($query);
+        $this->paginate = ['contain' => ['Users']];
+        $requests = $this->paginate($this->Requests->find());
 
         $this->set(compact('requests'));
     }
@@ -44,6 +44,7 @@ class RequestsController extends AppController
      */
     public function add()
     {
+        $this->Authorization->skipAuthorization();
         $request = $this->Requests->newEmptyEntity();
         if ($this->request->is('post')) {
             $request = $this->Requests->patchEntity($request, $this->request->getData());
@@ -98,6 +99,64 @@ class RequestsController extends AppController
             $this->Flash->error(__('The request could not be deleted. Please, try again.'));
         }
 
+        return $this->redirect(['action' => 'index']);
+    }
+
+    public function requestArtist()
+    {
+        $request = $this->Requests->newEmptyEntity();
+        if ($this->request->is('post')) {
+            $request = $this->Requests->patchEntity($request, $this->request->getData());
+            $request->user_id = $this->Authentication->getIdentity()->get('id');
+            $request->type = 'artist';
+            $request->status = 'pending';
+
+            if ($this->Requests->save($request)) {
+                $this->Flash->success(__('Votre demande a été envoyée avec succès.'));
+                return $this->redirect(['controller' => 'Artists', 'action' => 'index']);
+            }
+
+            $this->Flash->error(__('Erreur lors de l\'envoi de la demande.'));
+        }
+
+        $this->set(compact('request'));
+    }
+
+    public function requestAlbum()
+    {
+        $request = $this->Requests->newEmptyEntity();
+        if ($this->request->is('post')) {
+            $request = $this->Requests->patchEntity($request, $this->request->getData());
+            $request->user_id = $this->Authentication->getIdentity()->get('id');
+            $request->type = 'album';
+            $request->status = 'pending';
+
+            if ($this->Requests->save($request)) {
+                $this->Flash->success(__('Votre demande a été envoyée avec succès.'));
+                return $this->redirect(['controller' => 'Albums', 'action' => 'index']);
+            }
+
+            $this->Flash->error(__('Erreur lors de l\'envoi de la demande.'));
+        }
+
+        $this->set(compact('request'));
+    }
+
+    public function approve($id)
+    {
+        $request = $this->Requests->get($id);
+        $request->status = 'approved';
+        $this->Requests->save($request);
+        $this->Flash->success('Demande approuvée.');
+        return $this->redirect(['action' => 'index']);
+    }
+
+    public function reject($id)
+    {
+        $request = $this->Requests->get($id);
+        $request->status = 'rejected';
+        $this->Requests->save($request);
+        $this->Flash->error('Demande refusée.');
         return $this->redirect(['action' => 'index']);
     }
 }

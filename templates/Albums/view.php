@@ -58,9 +58,9 @@
                         <?= $album->artist ? $this->Html->link($album->artist->name, ['controller' => 'Artists', 'action' => 'view', $album->artist->id]) : '' ?>
                     </td>
                 </tr>
-                <tr><th><?= __('Release Date') ?></th><td><?= h($album->release_date) ?></td></tr>
-                <tr><th><?= __('Created') ?></th><td><?= h($album->created) ?></td></tr>
-                <tr><th><?= __('Modified') ?></th><td><?= h($album->modified) ?></td></tr>
+                <tr><th><?= __('Release Date') ?></th><td><?= $this->Time->format($album->release_date, 'dd/MM/yyyy') ?></td></tr>
+                <!-- <tr><th><?= __('Created') ?></th><td><?= h($album->created) ?></td></tr>
+                <tr><th><?= __('Modified') ?></th><td><?= h($album->modified) ?></td></tr> -->
             </table>
         </div>
     </div>
