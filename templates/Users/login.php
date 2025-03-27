@@ -1,12 +1,14 @@
-<h1>Login</h1>
+<div class="content">
+    <h1>Login</h1>
 
-<?= $this->Form->create() ?>
-<?= $this->Form->control('email', ['label' => 'Email']) ?>
-<?= $this->Form->control('password', [
-    'label' => 'Password',
-    'type' => 'password'
-]) ?>
-<?= $this->Form->button('Login') ?>
-<?= $this->Form->end() ?>
+    <?= $this->Form->create() ?>
+    <?= $this->Form->control('email', ['label' => 'Email']) ?>
+    <?= $this->Form->control('password', [
+        'label' => 'Password',
+        'type' => 'password'
+    ]) ?>
+    <?= $this->Form->button('Login') ?>
+    <?= $this->Form->end() ?>
 
-<p><?= $this->Html->link('No account yet? Register!', ['action' => 'register']) ?></p>
+    <p><?= $this->Html->link('No account yet? Register!', ['action' => 'register']) ?></p>
+</div>

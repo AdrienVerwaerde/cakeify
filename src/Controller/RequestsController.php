@@ -11,88 +11,66 @@ namespace App\Controller;
  */
 class RequestsController extends AppController
 {
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
     public function index()
     {
-        $this->paginate = ['contain' => ['Users']];
-        $requests = $this->paginate($this->Requests->find());
+        $this->Authorization->skipAuthorization();
+
+        $query = $this->Requests->find()->contain(['Users']);
+        $requests = $this->paginate($query);
 
         $this->set(compact('requests'));
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $id Request id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function view($id = null)
     {
         $request = $this->Requests->get($id, contain: ['Users']);
+        $this->Authorization->authorize($request);
+
         $this->set(compact('request'));
     }
 
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
     public function add()
     {
-        $this->Authorization->skipAuthorization();
         $request = $this->Requests->newEmptyEntity();
+        $this->Authorization->authorize($request);
+
         if ($this->request->is('post')) {
             $request = $this->Requests->patchEntity($request, $this->request->getData());
             if ($this->Requests->save($request)) {
                 $this->Flash->success(__('The request has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The request could not be saved. Please, try again.'));
         }
+
         $users = $this->Requests->Users->find('list', limit: 200)->all();
         $this->set(compact('request', 'users'));
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Request id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function edit($id = null)
     {
         $request = $this->Requests->get($id, contain: []);
+        $this->Authorization->authorize($request);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $request = $this->Requests->patchEntity($request, $this->request->getData());
             if ($this->Requests->save($request)) {
                 $this->Flash->success(__('The request has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The request could not be saved. Please, try again.'));
         }
+
         $users = $this->Requests->Users->find('list', limit: 200)->all();
         $this->set(compact('request', 'users'));
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id Request id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         $request = $this->Requests->get($id);
+        $this->Authorization->authorize($request);
+
         if ($this->Requests->delete($request)) {
             $this->Flash->success(__('The request has been deleted.'));
         } else {
@@ -103,60 +81,79 @@ class RequestsController extends AppController
     }
 
     public function requestArtist()
+
     {
         $request = $this->Requests->newEmptyEntity();
+        $this->Authorization->skipAuthorization();
+
+
         if ($this->request->is('post')) {
             $request = $this->Requests->patchEntity($request, $this->request->getData());
+
             $request->user_id = $this->Authentication->getIdentity()->get('id');
             $request->type = 'artist';
             $request->status = 'pending';
 
+            $this->Authorization->authorize($request);
+
             if ($this->Requests->save($request)) {
-                $this->Flash->success(__('Votre demande a été envoyée avec succès.'));
-                return $this->redirect(['controller' => 'Artists', 'action' => 'index']);
+                $this->Flash->success(__('Your request has been sent.'));
+                return $this->redirect(['controller' => 'Requests', 'action' => 'index']);
             }
 
-            $this->Flash->error(__('Erreur lors de l\'envoi de la demande.'));
+            $this->Flash->error(__('Error, please try again.'));
         }
 
         $this->set(compact('request'));
     }
+
 
     public function requestAlbum()
-    {
-        $request = $this->Requests->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $request = $this->Requests->patchEntity($request, $this->request->getData());
-            $request->user_id = $this->Authentication->getIdentity()->get('id');
-            $request->type = 'album';
-            $request->status = 'pending';
+{
+    $this->Authorization->skipAuthorization();
 
-            if ($this->Requests->save($request)) {
-                $this->Flash->success(__('Votre demande a été envoyée avec succès.'));
-                return $this->redirect(['controller' => 'Albums', 'action' => 'index']);
-            }
+    $request = $this->Requests->newEmptyEntity();
 
-            $this->Flash->error(__('Erreur lors de l\'envoi de la demande.'));
+    if ($this->request->is('post')) {
+        $title = $this->request->getData('album_title');
+        $artist = $this->request->getData('album_artist');
+
+        $request->type = 'album';
+        $request->data = "Title: $title\nArtist: $artist";
+        $request->user_id = $this->Authentication->getIdentity()->get('id');
+        $request->status = 'pending';
+
+        if ($this->Requests->save($request)) {
+            $this->Flash->success(__('Request sent successfully.'));
+            return $this->redirect(['controller' => 'Requests', 'action' => 'index']);
         }
 
-        $this->set(compact('request'));
+        $this->Flash->error(__('Error, please try again.'));
     }
+
+    $this->set(compact('request'));
+}
+
 
     public function approve($id)
     {
         $request = $this->Requests->get($id);
+        $this->Authorization->authorize($request, 'approve');
+
         $request->status = 'approved';
         $this->Requests->save($request);
-        $this->Flash->success('Demande approuvée.');
+        $this->Flash->success('Request approved.');
         return $this->redirect(['action' => 'index']);
     }
 
     public function reject($id)
     {
         $request = $this->Requests->get($id);
+        $this->Authorization->authorize($request, 'reject');
+
         $request->status = 'rejected';
         $this->Requests->save($request);
-        $this->Flash->error('Demande refusée.');
+        $this->Flash->error('Request denied.');
         return $this->redirect(['action' => 'index']);
     }
 }

@@ -9,7 +9,7 @@
     <?php if ($this->Identity->get('role') === 'admin') : ?>
         <?= $this->Html->link(__('New Artist'), ['action' => 'add'], ['class' => 'button float-right']) ?>
     <?php else : ?>
-        <?= $this->Html->link(__('Request Artist'), ['controller' => 'Requests', 'action' => 'add', 'artist'], ['class' => 'button float-right']) ?>
+        <?= $this->Html->link(__('Request Artist'), ['controller' => 'Requests', 'action' => 'requestArtist', 'artist'], ['class' => 'button float-right']) ?>
     <?php endif; ?>
 
     <h3><?= __('Artists') ?></h3>

@@ -52,6 +52,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                 <li><?= $this->Html->link('Artists', ['controller' => 'Artists', 'action' => 'index']) ?></li>
                 <li><?= $this->Html->link('Albums', ['controller' => 'Albums', 'action' => 'index']) ?></li>
                 <li><?= $this->Html->link('Stats', ['controller' => 'Stats', 'action' => 'index'], ['class' => 'nav-link']) ?></li>
+                <li><?= $this->Html->link('Requests', ['controller' => 'Requests', 'action' => 'index']) ?></li>
                 <?php if ($this->Identity->isLoggedIn()): ?>
                     <li>
                         <?= $this->Html->link(
@@ -60,8 +61,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                         ) ?>
                     </li>
                 <?php endif; ?>
-
-
 
                 <?php if ($this->Identity->isLoggedIn()): ?>
                     <li>
