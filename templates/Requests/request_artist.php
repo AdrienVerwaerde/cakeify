@@ -5,6 +5,7 @@
     <fieldset>
         <?= $this->Form->control('data', [
             'label' => 'Artist Name',
+            'type' => 'text',
             'required' => true
         ]) ?>
     </fieldset>

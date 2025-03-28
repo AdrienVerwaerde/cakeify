@@ -11,7 +11,7 @@
         <div class="artist-list" style="display: grid; gap: 2rem;">
             <?php foreach ($lastArtists as $artist): ?>
                 <div class="artist-card">
-                    <h4><?= h($artist->name) ?></h4>
+                    <h4><?= $this->Html->link($artist->name, ['controller' => 'Artists', 'action' => 'view', $artist->id]) ?></h4>
                     <?php if (!empty($artist->spotify_link)) : ?>
                         <iframe
                             src="<?= h($artist->spotify_link) ?>"

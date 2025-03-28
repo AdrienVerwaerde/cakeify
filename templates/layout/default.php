@@ -21,6 +21,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <html>
 
 <head>
+    <?php echo $this->Html->css('https://fonts.googleapis.com/css2?family=Poppins&display=swap', ['block' => true]); ?>
+    <?php echo $this->Html->css('https://fonts.googleapis.com/css2?family=Gidole&family=Roboto+Slab:wght@100..900&display=swap', ['block' => true]); ?>
+
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
@@ -57,7 +60,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                     <li>
                         <?= $this->Html->link(
                             h($this->Identity->get('email')),
-                            ['controller' => 'Users', 'action' => 'view', $this->Identity->get('id')]
+                            ['controller' => 'Users', 'action' => 'view', $this->Identity->get('id')],
+                            ['style' => 'color: var(--color-cakephp-blue);']
                         ) ?>
                     </li>
                 <?php endif; ?>

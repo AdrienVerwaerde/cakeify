@@ -2,7 +2,7 @@
 :root {
     /* The following are official CakePHP colors */
     --color-cakephp-red: #d33c43;
-    --color-cakephp-gray: #404041;
+    --color-cakephp-gray: #666;
     --color-cakephp-blue: #2f85ae;
     --color-cakephp-lightblue: #34bdd7;
 
@@ -33,12 +33,13 @@
 }
 
 .button, button, input[type='button'], input[type='reset'], input[type='submit'] {
-    background-color: var(--color-cakephp-red);
-    border-color: var(--color-cakephp-red);
+    background-color: var(--color-cakephp-blue);
+    border-color: var(--color-cakephp-blue);
+    transition: all 0.2s ease-in-out;
 }
 
 body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 400;
     background: var(--color-main-bg);
 }
@@ -46,7 +47,7 @@ body {
 .top-nav-links,
 .side-nav,
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Raleway", sans-serif;
+    font-family: 'Gidole', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -56,14 +57,14 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
     color: var(--color-links);
-    transition: color 0.2s linear;
+    transition: all 0.2s ease-in-out;
 }
 
 a:hover,
 a:focus,
 a:active {
     color: var(--color-links-active);
-    transition: color 0.2s ease-out;
+    transition: all 0.2s ease-in-out;
 }
 
 .side-nav a,
@@ -91,7 +92,8 @@ th a,
 /* Main */
 .content {
     padding: 2rem;
-    background: var(--color-white);
+    margin-bottom: 2rem;
+    background: linear-gradient(270deg, #2f86ae2c, white);
     border-radius: 0.4rem;
     /* Thanks Stripe */
     box-shadow: 0 7px 14px 0 rgba(60, 66, 87, 0.1),
@@ -122,7 +124,7 @@ th {
 }
 .top-nav-title a {
     font-size: 2.4rem;
-    color: var(--color-cakephp-red);
+    color: var(--color-cakephp-blue);
 }
 .top-nav-title span {
     color: var(--color-cakephp-gray);
